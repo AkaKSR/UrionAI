@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game30 Publishing Hub</title>
+  <style>
+    :root{
+      --bg:#0b1020;--panel:#151c33;--line:#2c3a67;--txt:#e8eeff;--muted:#9fb0e0;
+      --done:#1d6b3b;--wip:#7a5a1f;--todo:#4b5563;--tierA:#2563eb;--tierB:#7c3aed;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,#0b1020,#0a0f1b);color:var(--txt)}
+    .wrap{max-width:1100px;margin:0 auto;padding:20px}
+    h1{margin:0 0 8px}
+    .muted{color:var(--muted)}
+    .top{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:end;margin-bottom:14px}
+    .stats{display:flex;gap:10px;flex-wrap:wrap}
+    .pill{padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:#111833;font-size:12px}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 18px}
+    button{border:1px solid var(--line);background:#101832;color:var(--txt);padding:8px 12px;border-radius:10px;cursor:pointer}
+    button.active{outline:2px solid #93c5fd}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:172px}
+    .badges{display:flex;gap:6px;flex-wrap:wrap}
+    .tag{display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px}
+    .done{background:var(--done)} .wip{background:var(--wip)} .todo{background:var(--todo)}
+    .tierA{background:var(--tierA)} .tierB{background:var(--tierB)}
+    a.play{display:inline-block;padding:7px 11px;border-radius:8px;background:#1f3a8a;color:#fff;text-decoration:none}
+    .desc{font-size:13px;color:#c8d5ff;line-height:1.35}
+    .foot{margin-top:18px;color:var(--muted);font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>🎮 Game30 Publishing Hub</h1>
+        <div class="muted">Phaser 기반 · 모바일/PC 웹 · B안(10 완성 + 20 프로토타입)</div>
+      </div>
+      <div class="stats" id="stats"></div>
+    </div>
+
+    <div class="controls">
+      <button data-filter="all" class="active">전체</button>
+      <button data-filter="A">Tier A</button>
+      <button data-filter="B">Tier B</button>
+      <button data-filter="done">완료만</button>
+    </div>
+
+    <div class="grid" id="list"></div>
+    <div class="foot">로컬 허브 4473 환경 기준. 게임 카드를 눌러 플레이할 수 있습니다. · <a href="./games.json" style="color:#93c5fd">games.json</a> · <a href="./GAME_GUIDES.md" style="color:#93c5fd">quick guides</a></div>
+  </div>
+
+<script>
+const games = [
+  {id:1,title:'Neon Dodger',slug:'neon-dodger',tier:'A',status:'done',desc:'장애물 회피 생존 아케이드'},
+  {id:2,title:'Brick Pulse',slug:'brick-pulse',tier:'A',status:'done',desc:'브릭 브레이커 + 반사각 컨트롤'},
+  {id:3,title:'Dungeon Sprint',slug:'dungeon-sprint',tier:'A',status:'done',desc:'코인 회수형 탑다운 생존'},
+  {id:4,title:'Sky Hook',slug:'sky-hook',tier:'A',status:'done',desc:'갈고리 물리 스윙 이동'},
+  {id:5,title:'Merge Alchemy',slug:'merge-alchemy',tier:'A',status:'done',desc:'스왑/머지 기반 퍼즐'},
+  {id:6,title:'Rail Defender',slug:'rail-defender',tier:'A',status:'done',desc:'경로 방어형 라인 디펜스'},
+  {id:7,title:'Orbit Miner',slug:'orbit-miner',tier:'A',status:'done',desc:'궤도 채굴 + 에너지 관리'},
+  {id:8,title:'Tiny Tactics',slug:'tiny-tactics',tier:'A',status:'done',desc:'턴제 미니 전술'},
+  {id:9,title:'Drift Loop',slug:'drift-loop',tier:'A',status:'done',desc:'탑뷰 드리프트 랩 챌린지'},
+  {id:10,title:'Rhythm Tap Runner',slug:'rhythm-tap-runner',tier:'A',status:'done',desc:'리듬 템포 장애물 점프'},
+
+  {id:11,title:'One-Button Ninja',slug:'one-button-ninja',tier:'B',status:'done',desc:'원버튼 점프 러너'},
+  {id:12,title:'Gravity Flip Maze',slug:'gravity-flip-maze',tier:'B',status:'done',desc:'중력 반전 미로'},
+  {id:13,title:'Color Chain Match',slug:'color-chain-match',tier:'B',status:'done',desc:'동일색 체인 매치'},
+  {id:14,title:'Pixel Fishing Idle',slug:'pixel-fishing-idle',tier:'B',status:'done',desc:'방치형 낚시/강화'},
+  {id:15,title:'Shadow Stealth Rooms',slug:'shadow-stealth-rooms',tier:'B',status:'done',desc:'잠입 회피 미션'},
+  {id:16,title:'Boss Pattern Trainer',slug:'boss-pattern-trainer',tier:'B',status:'done',desc:'보스 탄막 패턴 연습'},
+  {id:17,title:'Bullet Garden',slug:'bullet-garden',tier:'B',status:'done',desc:'수집형 생존 아레나'},
+  {id:18,title:'Tower Stack Physics',slug:'tower-stack-physics',tier:'B',status:'done',desc:'물리 스택 타워'},
+  {id:19,title:'Word Spell Blitz',slug:'word-spell-blitz',tier:'B',status:'done',desc:'타이핑 스프린트'},
+  {id:20,title:'Card Duel Lite',slug:'card-duel-lite',tier:'B',status:'done',desc:'라이트 카드 전투'},
+  {id:21,title:'Portal Sokoban',slug:'portal-sokoban',tier:'B',status:'done',desc:'포탈 박스 밀기'},
+  {id:22,title:'Ice Slide Puzzles',slug:'ice-slide-puzzles',tier:'B',status:'done',desc:'빙판 슬라이드 퍼즐'},
+  {id:23,title:'Frog Hop Cross',slug:'frog-hop-cross',tier:'B',status:'done',desc:'개구리 횡단 액션'},
+  {id:24,title:'Meteor Harvest',slug:'meteor-harvest',tier:'B',status:'done',desc:'낙하 운석 채집'},
+  {id:25,title:'Robo Factory Conveyor',slug:'robo-factory-conveyor',tier:'B',status:'done',desc:'컨베이어 분류 게임'},
+  {id:26,title:'Hex Territory Grab',slug:'hex-territory-grab',tier:'B',status:'done',desc:'영역 점령 미니 게임'},
+  {id:27,title:'City Signal Control',slug:'city-signal-control',tier:'B',status:'done',desc:'교통 신호 제어'},
+  {id:28,title:'Mini Golf Angles',slug:'mini-golf-angles',tier:'B',status:'done',desc:'각도형 미니골프'},
+  {id:29,title:'Cannon Curve Shot',slug:'cannon-curve-shot',tier:'B',status:'done',desc:'곡사포 탄도 샷'},
+  {id:30,title:'Cooking Rush Queue',slug:'cooking-rush-queue',tier:'B',status:'done',desc:'주문 큐 처리'},
+];
+
+const list = document.getElementById('list');
+const stats = document.getElementById('stats');
+const statusTag = {done:['완료','done'],wip:['개발중','wip'],todo:['대기','todo']};
+let mode='all';
+
+function renderStats(){
+  const done = games.filter(g=>g.status==='done').length;
+  const tierA = games.filter(g=>g.tier==='A').length;
+  const tierB = games.filter(g=>g.tier==='B').length;
+  stats.innerHTML = `
+    <div class='pill'>총 ${games.length}개</div>
+    <div class='pill'>완료 ${done}개</div>
+    <div class='pill'>Tier A ${tierA}개</div>
+    <div class='pill'>Tier B ${tierB}개</div>`;
+}
+
+function filtered(){
+  if(mode==='all') return games;
+  if(mode==='done') return games.filter(g=>g.status==='done');
+  return games.filter(g=>g.tier===mode);
+}
+
+function render(){
+  list.innerHTML='';
+  filtered().forEach(g=>{
+    const [txt,cls]=statusTag[g.status]||statusTag.todo;
+    const href = `../games/${g.slug}/index.html`;
+    const card=document.createElement('article');
+    card.className='card';
+    card.innerHTML = `
+      <div class='badges'>
+        <span class='tag ${cls}'>${txt}</span>
+        <span class='tag ${g.tier==='A'?'tierA':'tierB'}'>Tier ${g.tier}</span>
+      </div>
+      <strong>${g.id}. ${g.title}</strong>
+      <div class='desc'>${g.desc}</div>
+      <div style='margin-top:auto'>${g.status==='done'||g.status==='wip' ? `<a class='play' href='${href}'>플레이하기</a>` : '준비중'}</div>`;
+    list.appendChild(card);
+  });
+}
+
+document.querySelectorAll('button[data-filter]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    mode = btn.dataset.filter;
+    document.querySelectorAll('button[data-filter]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  });
+});
+
+renderStats();
+render();
+</script>
+</body>
+</html>

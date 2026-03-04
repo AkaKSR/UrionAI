@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>URION Prototype Selector</title>
+  <style>
+    :root { --bg:#020617; --card:#0f172a; --line:#334155; --txt:#e2e8f0; --sub:#94a3b8; --acc:#22d3ee; }
+    * { box-sizing: border-box; }
+    body {
+      margin:0; min-height:100vh; display:grid; place-items:center; padding:24px;
+      background: radial-gradient(circle at 50% 10%, #1e1b4b 0%, var(--bg) 60%);
+      color:var(--txt); font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+    .wrap { width:min(860px, 96vw); }
+    h1 { margin:0 0 8px; font-size:40px; }
+    .sub { margin:0 0 24px; color:var(--sub); }
+    .grid { display:grid; gap:14px; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); }
+    .card {
+      display:block; text-decoration:none; color:inherit; border:1px solid var(--line); border-radius:14px;
+      background:linear-gradient(180deg,#111827,var(--card)); padding:18px;
+      transition:.18s transform,.18s border-color,.18s box-shadow;
+    }
+    .card:hover { transform:translateY(-2px); border-color:var(--acc); box-shadow:0 10px 30px rgba(34,211,238,.15); }
+    .badge { display:inline-block; margin-bottom:10px; font-size:12px; color:#67e8f9; border:1px solid #155e75; border-radius:999px; padding:3px 8px; }
+    .title { margin:0 0 6px; font-size:20px; color:#f8fafc; }
+    .desc { margin:0; color:var(--sub); line-height:1.45; font-size:14px; }
+    footer { margin-top:16px; color:#64748b; font-size:12px; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>URION Prototype Selector</h1>
+    <p class="sub">원하는 프로토타입을 선택하세요.</p>
+
+    <section class="grid">
+      <a class="card" href="http://arm4core.tail85f433.ts.net:4473/publishing/index.html" target="_blank" rel="noopener noreferrer">
+        <span class="badge">Prototype A</span>
+        <h2 class="title">4473 Publishing Hub</h2>
+        <p class="desc">기존 4473 포트 퍼블리싱 페이지 및 연결 게임으로 이동합니다.</p>
+      </a>
+
+      <a class="card" href="http://arm4core.tail85f433.ts.net:4573/publishing/index.html" target="_blank" rel="noopener noreferrer">
+        <span class="badge">Prototype B</span>
+        <h2 class="title">4573 Publishing Hub</h2>
+        <p class="desc">신규 4573 포트(30개 게임) 퍼블리싱 페이지로 이동합니다.</p>
+      </a>
+    </section>
+
+    <footer>URION · Prototype Routing Page</footer>
+  </main>
+</body>
+</html>
