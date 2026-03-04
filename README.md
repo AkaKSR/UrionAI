@@ -48,9 +48,10 @@ cd prototype-monorepo
 bash scripts/deploy.sh
 ```
 
-> 기본 타겟 서버: `ubuntu@arm4core.tail85f433.ts.net`
+> 기본 타겟 서버: `<USER>@<HOST>`
 
 ## 참고
 
 - 4473은 `urion-gamehub` 런타임(/home/ubuntu/apps/urion-gamehub-runtime) 기준
 - 4573은 `game-factory-4573` 런타임(/home/ubuntu/apps/game-factory-runtime) 기준
+- 개발 노하우/운영 문서는 `docs/knowledge/*_SANITIZED.md`에 정리 (민감정보 마스킹본)
