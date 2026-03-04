@@ -9,8 +9,12 @@ prototype-monorepo/
   apps/
     prototype-publishing/   # 4473의 prototypes.html 대응
       index.html
-    prototype-a/            # 4473 허브(3개 게임 링크) 대응
+    prototype-a/            # 4473 허브 + 프로토타입 A 게임 소스
       index.html
+      games/
+        neon-drift-core-survivor/
+        highway-rush/
+        echo-of-ruins/
     prototype-b/            # 4573 허브(30개 게임) 대응
       publishing/
       games/
